@@ -53,8 +53,8 @@ nx3 = 64
 iso_sound_speed = 1.0        # isothermal sound speed
 gamma      = 1.4     # gamma = C_p/C_v
 
-<problem>
-v0 = .01
+<problem> # what are the reasonable values?
+v0 = 1
 d0 = 1
 p0 = 1
 L = 2.0*PI
