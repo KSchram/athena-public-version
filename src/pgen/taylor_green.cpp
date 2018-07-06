@@ -38,9 +38,9 @@
 
 void MeshBlock::ProblemGenerator(ParameterInput *pin) {
   Real v0 = pin->GetReal("problem","v0");
-  Real d0 = pin->GetReal("problem","d0");
+  Real rho0 = pin->GetReal("problem","rho0");
   Real p0 = pin->GetReal("problem","p0");
-  Real L = pin->GetReal("problem","L");
+  Real x_len = pin->GetReal("mesh","x1max") - pin->GetReal("mesh","x1min");
 
   AthenaArray<Real> az;
   int nx1 = (ie-is)+1 + 2*(NGHOST);
@@ -48,17 +48,15 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
   int nx3 = (ke-ks)+1 + 2*(NGHOST);
   az.NewAthenaArray(nx3,nx2,nx1);
 
-  Real R = 8.314;
-  Real T0 = p0/(d0*R);
+  Real L = 2.0*PI*x_len;
     
   // Initialize density and momentum
   for (int k=ks; k<=ke; k++) {
   for (int j=js; j<=je; j++) {
   for (int i=is; i<=ie; i++) {
-    Real p = p0 + (d0*v0*v0/16)*(cos(2*pcoord->x1v(i)/L)+cos(2*pcoord->x2v(j)/L))*(cos(2*pcoord->x3v(k)/L)+2);
-    phydro->u(IDN,k,j,i) = p/(R*T0); //density
-    phydro->u(IM1,k,j,i) = -d0*v0*cos(pcoord->x1v(i)/L)*sin(pcoord->x2v(j)/L)*cos(pcoord->x3v(k)/L); //y momentum, L = 2pi
-    phydro->u(IM2,k,j,i) = d0*v0*sin(pcoord->x1v(i)/(2.0*PI))*cos(pcoord->x2v(j)/(2.0*PI))*cos(pcoord->x3v(k)/L); //x momentum, L = 2pi
+    phydro->u(IDN,k,j,i) = rho0+(rho0*rho0*v0*v0/(p0*16))*(cos(2*pcoord->x1v(i)/L)+cos(2*pcoord->x2v(j)/L))*(cos(2*pcoord->x3v(k)/L)+2); //density
+    phydro->u(IM1,k,j,i) = rho0*v0*sin(pcoord->x1v(i)/L)*cos(pcoord->x2v(j)/L)*cos(pcoord->x3v(k)/L); //x momentum
+    phydro->u(IM2,k,j,i) = -rho0*v0*cos(pcoord->x1v(i)/L)*sin(pcoord->x2v(j)/L)*cos(pcoord->x3v(k)/L); //y momentum
     phydro->u(IM3,k,j,i) = 0.0; //z momentum
   }}}
 

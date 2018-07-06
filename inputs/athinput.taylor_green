@@ -18,7 +18,7 @@ dt         = 0.01      # time increment between outputs
 <time>
 cfl_number = 0.4       # The Courant, Friedrichs, & Lewy (CFL) Number
 nlim       = -1        # cycle limit
-tlim       = 1.0       # time limit
+tlim       = 5.0       # time limit
 integrator = vl2       # time integration algorithm
 xorder     = 2         # order of spatial reconstruction
 ncycle_out = 1         # interval for stdout summary info
@@ -54,7 +54,6 @@ iso_sound_speed = 1.0        # isothermal sound speed
 gamma      = 1.4     # gamma = C_p/C_v
 
 <problem> # what are the reasonable values?
-v0 = 1
-d0 = 1
-p0 = 1
-L = 2.0*PI
+v0 = 1.0
+rho0 = 1.0
+p0 = 1.0
