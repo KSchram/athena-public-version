@@ -37,11 +37,12 @@
 //========================================================================================
 
 void MeshBlock::ProblemGenerator(ParameterInput *pin) {
-  Real v0 = pin->GetReal("problem","v0");
+  Real M0 = pin->GetReal("problem","M0");
   Real rho0 = pin->GetReal("problem","rho0");
   Real p0 = pin->GetReal("problem","p0");
   Real x_len = pin->GetReal("mesh","x1max") - pin->GetReal("mesh","x1min");
-
+  Real gamma = pin->GetReal("hydro","gamma");
+    
   AthenaArray<Real> az;
   int nx1 = (ie-is)+1 + 2*(NGHOST);
   int nx2 = (je-js)+1 + 2*(NGHOST);
@@ -54,12 +55,21 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
   for (int k=ks; k<=ke; k++) {
   for (int j=js; j<=je; j++) {
   for (int i=is; i<=ie; i++) {
-    phydro->u(IDN,k,j,i) = rho0+(rho0*rho0*v0*v0/(p0*16))*(cos(2*pcoord->x1v(i)/L)+cos(2*pcoord->x2v(j)/L))*(cos(2*pcoord->x3v(k)/L)+2); //density
-    phydro->u(IM1,k,j,i) = rho0*v0*sin(pcoord->x1v(i)/L)*cos(pcoord->x2v(j)/L)*cos(pcoord->x3v(k)/L); //x momentum
-    phydro->u(IM2,k,j,i) = -rho0*v0*cos(pcoord->x1v(i)/L)*sin(pcoord->x2v(j)/L)*cos(pcoord->x3v(k)/L); //y momentum
+    Real c = sqrt(gamma*p0/rho0);
+    Real v0 = c*M0;
+    Real p = p0 + (rho0*v0*v0/16)*(cos(2*pcoord->x1v(i)/L)+cos(2*pcoord->x2v(j)/L))*(cos(2*pcoord->x3v(k)/L)+2);
+    Real rho = p*rho0/p0;
+    
+    phydro->u(IDN,k,j,i) = rho; //density
+    phydro->u(IM1,k,j,i) = -rho0*v0*cos(pcoord->x1v(i)/L)*sin(pcoord->x2v(j)/L)*cos(pcoord->x3v(k)/L); //y momentum, L = 2pi
+    phydro->u(IM2,k,j,i) = rho0*v0*sin(pcoord->x1v(i)/L)*cos(pcoord->x2v(j)/L)*cos(pcoord->x3v(k)/L); //x momentum, L = 2pi
     phydro->u(IM3,k,j,i) = 0.0; //z momentum
-  }}}
-
+      
+    if (NON_BAROTROPIC_EOS) {
+        phydro->u(IEN,k,j,i) = 0.5*rho*((phydro->u(IM1,k,j,i)/rho)*(phydro->u(IM1,k,j,i)/rho) + (phydro->u(IM2,k,j,i)/rho)*(phydro->u(IM2,k,j,i)/rho) + (phydro->u(IM3,k,j,i)/rho)*(phydro->u(IM3,k,j,i)/rho)) + rho*p/(rho*(gamma-1.0));
+        }
+    }}}
+    
   az.DeleteAthenaArray();
   return;
 }
