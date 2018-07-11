@@ -13,12 +13,12 @@ dt         = 0.01      # time increment between outputs
 <output2>
 file_type  = vtk       # VTK data dump
 variable   = prim      # variables to be output
-dt         = 0.3416    # time increment between outputs
+dt         = 0.108     # time increment between outputs
 
 <time>
 cfl_number = 0.4       # The Courant, Friedrichs, & Lewy (CFL) Number
 nlim       = -1        # cycle limit
-tlim       = 50.265    # time limit
+tlim       = 10.8      # time limit: 8tc where tc is L/V0
 integrator = vl2       # time integration algorithm
 xorder     = 2         # order of spatial reconstruction
 ncycle_out = 1         # interval for stdout summary info
@@ -52,7 +52,7 @@ nx3 = 64
 <hydro>
 gamma = 1.4                # gamma = C_p/C_v
 
-<problem> # what are the reasonable values?
-M0 = 0.1
+<problem>
+M0 = 0.10
 rho0 = 1.0
 p0 = 1.0
