@@ -57,19 +57,19 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
   for (int j=js; j<=je; j++) {
   for (int i=is; i<=ie; i++) {
 
-    Real p = p0 + (rho0*v0*v0/16)*(cos(2*i/L)+cos(2*j/L))*(cos(2*k/L)+2);
+    Real p = p0 + (rho0*v0*v0/16)*(cos(2*pcoord->x1v(i)/L)+cos(2*pcoord->x2v(j)/L))*(cos(2*pcoord->x3v(k)/L)+2);
     Real rho = p*rho0/p0;
     
     phydro->u(IDN,k,j,i) = rho; //density
-    phydro->u(IM1,k,j,i) = rho*v0*sin(i/L)*cos(j/L)*cos(k/L); //x momentum
-    phydro->u(IM2,k,j,i) = -1*rho*v0*cos(i/L)*sin(j/L)*cos(k/L); //y momentum
+    phydro->u(IM1,k,j,i) = rho*v0*sin(pcoord->x1v(i)/L)*cos(pcoord->x2v(j)/L)*cos(pcoord->x3v(k)/L); //x momentum
+    phydro->u(IM2,k,j,i) = -1*rho*v0*cos(pcoord->x1v(i)/L)*sin(pcoord->x2v(j)/L)*cos(pcoord->x3v(k)/L); //y momentum
     phydro->u(IM3,k,j,i) = 0.0; //z momentum
       
     if (NON_BAROTROPIC_EOS) {
         phydro->u(IEN,k,j,i) = 0.5*rho*
-        ((i/rho)*(i/rho) +
-         (j/rho)*(j/rho) +
-         (k/rho)*(k/rho)) +
+        ((pcoord->x1v(i)/rho)*(pcoord->x1v(i)/rho) +
+         (pcoord->x2v(j)/rho)*(pcoord->x2v(j)/rho) +
+         (pcoord->x3v(k)/rho)*(pcoord->x3v(k)/rho)) +
         rho*p/(rho*(gamma-1.0));
         }
     }}}
