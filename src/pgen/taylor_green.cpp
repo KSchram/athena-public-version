@@ -67,9 +67,9 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
       
     if (NON_BAROTROPIC_EOS) {
         phydro->u(IEN,k,j,i) = 0.5*rho*
-        ((pcoord->x1v(i)/rho)*(pcoord->x1v(i)/rho) +
-         (pcoord->x2v(j)/rho)*(pcoord->x2v(j)/rho) +
-         (pcoord->x3v(k)/rho)*(pcoord->x3v(k)/rho)) +
+        ((phydro->u(IM1,k,j,i)/rho)*(phydro->u(IM1,k,j,i)/rho) +
+         (phydro->u(IM2,k,j,i)/rho)*(phydro->u(IM2,k,j,i)/rho) +
+         (phydro->u(IM3,k,j,i)/rho)*(phydro->u(IM3,k,j,i)/rho)) +
         rho*p/(rho*(gamma-1.0));
         }
     }}}
