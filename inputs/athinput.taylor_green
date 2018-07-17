@@ -13,12 +13,12 @@ dt         = 0.01      # time increment between outputs
 <output2>
 file_type  = vtk       # VTK data dump
 variable   = prim      # variables to be output
-dt         = 0.27      # time increment between outputs
+dt         = 1.69      # time increment between outputs
 
 <time>
-cfl_number = 0.4       # The Courant, Friedrichs, & Lewy (CFL) Number
+cfl_number = 0.333     # The Courant, Friedrichs, & Lewy (CFL) Number
 nlim       = -1        # cycle limit
-tlim       = 27        # time limit: 8tc where tc is L/V0
+tlim       = 169       # time limit: 20tc where tc is L/V0
 integrator = vl2       # time integration algorithm
 xorder     = 2         # order of spatial reconstruction
 ncycle_out = 1         # interval for stdout summary info
